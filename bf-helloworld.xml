@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE Brainfuck SYSTEM "bf.dtd">
+<Brainfuck>
+	<!-- This is the code for the Hello World in Brainfuck -->
+	<Code>
+		<![CDATA[
+			>+++++++++[<++++++++>-]<.
+			>+++++++[<++++>-]<+.
+			+++++++..
+			+++.
+			[-]>++++++++[<++++>-]<.
+			>+++++++++++[<+++++>-]<.
+			>++++++++[<+++>-]<.+++.
+			------.
+			--------.
+			[-]>++++++++[<++++>-]<+.
+			[-]++++++++++.
+		]]>
+	</Code>
+	<!-- No input needed for the simple Hello World program -->
+	<Input>
+	</Input>
+</Brainfuck>
+

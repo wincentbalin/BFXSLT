@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT Brainfuck (Code,Input?)>
+<!ELEMENT Code (#PCDATA)>
+<!ELEMENT Input (#PCDATA)>
