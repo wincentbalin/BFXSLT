@@ -203,7 +203,7 @@ Code: <xsl:value-of select="$code"/>
 		</xsl:message>
 		<xsl:message>
 Length of data: <xsl:value-of select="string-length($data)"/>
-Data: <xsl:value-of select="$data"/>
+Data: <xsl:value-of select="$data-memory"/>
 		</xsl:message>
 		<xsl:message>
 Length of input: <xsl:value-of select="string-length($input)"/>
