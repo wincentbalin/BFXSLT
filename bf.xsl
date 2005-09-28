@@ -186,7 +186,7 @@
 
 <!-- Main function      -->
 <!-- Processes the code -->
-<xsl:template name="process-code">
+<xsl:template name="process-code" match="//Brainfuck">
 	<xsl:param name="data-memory" select="$data"/>
 	<xsl:param name="code-pointer" select="0"/>
 	<xsl:param name="data-pointer" select="0"/>
@@ -293,11 +293,6 @@ Jump table: <xsl:value-of select="$jump-table"/>
 		</xsl:call-template>
 	</xsl:if>
 
-</xsl:template>
-
-<!-- Main function -->
-<xsl:template match="//Brainfuck">
-	<xsl:call-template name="process-code"/>
 </xsl:template>
 
 </xsl:transform>
