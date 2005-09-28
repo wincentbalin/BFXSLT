@@ -138,7 +138,7 @@
 	<element>
 
 	<xsl:choose>
-		<xsl:when test="$command = '+'">
+		<xsl:when test="starts-with($command, '+')">
 			<xsl:variable name="value" select="$data/element[position()-1 = $data-pointer]"/>
 			<xsl:choose>
 				<xsl:when test="$value = 255">
@@ -149,7 +149,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:when>
-		<xsl:when test="$command = '-'">
+		<xsl:when test="starts-with($command, '-')">
 			<xsl:variable name="value" select="$data/element[position()-1 = $data-pointer]"/>
 			<xsl:choose>
 				<xsl:when test="$value = 0">
@@ -160,7 +160,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:when>
-		<xsl:when test="$command = ','">
+		<xsl:when test="starts-with($command, ',')">
 			<xsl:call-template name="char2ascii">
 				<xsl:with-param name="char" select="substring($input, $input-pointer, 1)"/>
 			</xsl:call-template>
