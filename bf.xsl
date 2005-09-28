@@ -48,6 +48,143 @@
 <xsl:template name="process-jumps">
 	
 </xsl:template>
+
+<!-- Increases code pointer dependant of the current command,
+     because some command are &lt; and &lt; -->
+<xsl:template name="next-instruction">
+	<xsl:param name="code-pointer"/>
+	<xsl:param name="command"/>
+
+	<xsl:choose>
+		<xsl:when test="starts-with($command, '&lt;')">
+			<xsl:value-of select="$code-pointer + 2"/>
+		</xsl:when>
+		<xsl:when test="starts-with($command, '&gt;')">
+			<xsl:value-of select="$code-pointer + 2"/>
+		</xsl:when>
+		<xsl:when test="starts-with($command, '[')">
+			<xsl:value-of select="$code-pointer + 1"/>
+		</xsl:when>
+		<xsl:when test="starts-with($command, ']')">
+			<xsl:value-of select="$code-pointer + 1"/>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:value-of select="$code-pointer + 1"/>
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
+<!-- Moves data pointer -->
+<xsl:template name="change-data-pointer">
+	<xsl:param name="data-pointer"/>
+	<xsl:param name="code-pointer"/>
+	<xsl:param name="command"/>
+
+	<xsl:choose>
+		<xsl:when test="starts-with($command, '&lt;')">
+			<xsl:if test="$data-pointer = 0">
+				<xsl:message terminate="yes">Data pointer underrun on <xsl:value-of select="$data-pointer"/> at code character <xsl:value-of select="$command"/> on <xsl:value-of select="$code-pointer"/></xsl:message>
+			</xsl:if>
+			<xsl:value-of select="$data-pointer - 1"/>
+		</xsl:when>
+		<xsl:when test="starts-with($command, '&gt;')">
+			<xsl:if test="$data-pointer = ($data-length - 1)">
+				<xsl:message terminate="yes">Data pointer overrun on <xsl:value-of select="$data-pointer"/> at code character <xsl:value-of select="$command"/> on <xsl:value-of select="$code-pointer"/></xsl:message>
+			</xsl:if>
+			<xsl:value-of select="$data-pointer + 1"/>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:value-of select="$data-pointer"/>
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
+<!-- Moves input pointer -->
+<xsl:template name="change-input-pointer">
+	<xsl:param name="input-pointer"/>
+	<xsl:param name="command"/>
+
+	<xsl:choose>
+		<xsl:when test="starts-with($command, ',')">
+			<xsl:value-of select="$input-pointer + 1"/>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:value-of select="$input-pointer"/>
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
+<!-- Outputs a character -->
+<xsl:template name="output-data">
+	<xsl:param name="data"/>
+	<xsl:param name="data-pointer"/>
+	<xsl:param name="command"/>
+
+	<xsl:if test="$command = '.'">
+		<xsl:variable name="value" select="$data/element[position()-1 = $data-pointer]"/>
+		<xsl:value-of select="string($value)"/>
+	</xsl:if>
+</xsl:template>
+
+<!-- Changes data -->
+<xsl:template name="change-data">
+	<xsl:param name="data"/>
+	<xsl:param name="data-pointer"/>
+	<xsl:param name="input"/>
+	<xsl:param name="input-pointer"/>
+	<xsl:param name="command"/>
+
+	<xsl:copy-of select="$data/element[position()-1 &lt; $data-pointer]"/>
+	<element>
+
+	<xsl:choose>
+		<xsl:when test="$command = '+'">
+			<xsl:variable name="value" select="$data/element[position()-1 = $data-pointer]"/>
+			<xsl:choose>
+				<xsl:when test="$value = 255">
+					0
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$value + 1"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$command = '-'">
+			<xsl:variable name="value" select="$data/element[position()-1 = $data-pointer]"/>
+			<xsl:choose>
+				<xsl:when test="$value = 0">
+					255	
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$value - 1"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$command = ','">
+			<xsl:call-template name="char2ascii">
+				<xsl:with-param name="char" select="substring($input, $input-pointer, 1)"/>
+			</xsl:call-template>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:value-of select="$data/element[position()-1 = $data-pointer]"/>
+		</xsl:otherwise>
+	</xsl:choose>
+
+	</element>
+	<xsl:copy-of select="$data/element[position()-1 &gt; $data-pointer]"/>
+</xsl:template>
+
+<!-- Converts a 1-character string to it's ASCII code -->
+<xsl:template name="char2ascii">
+	<xsl:param name="char"/>
+</xsl:template>
+
+<!-- Converts a number of ASCII code to character -->
+<xsl:template name="ascii2char">
+	<xsl:param name="ascii"/>
+</xsl:template>
+
+<!-- Main function      -->
 <!-- Processes the code -->
 <xsl:template name="process-code">
 	<xsl:param name="data-memory" select="$data"/>
@@ -56,12 +193,111 @@
 	<xsl:param name="input-pointer" select="0"/>
 
 
+	<xsl:variable name="command" select="substring($code, $code-pointer, 2)"/>
+
+	<!-- Debug output - begin -->
+	<xsl:if test="$debug = 'yes'">
+		<xsl:message>
+Length of code: <xsl:value-of select="string-length($code)"/>
+Code: <xsl:value-of select="$code"/>
+		</xsl:message>
+		<xsl:message>
+Length of data: <xsl:value-of select="string-length($data)"/>
+Data: <xsl:value-of select="$data"/>
+		</xsl:message>
+		<xsl:message>
+Length of input: <xsl:value-of select="string-length($input)"/>
+Input: <xsl:value-of select="$input"/>
+		</xsl:message>
+		<xsl:message>
+Length of jump table: <xsl:value-of select="string-length($jump-table)"/>
+Jump table: <xsl:value-of select="$jump-table"/>
+		</xsl:message>
+
+		<xsl:message>Current command: <xsl:value-of select="$command"/></xsl:message>
+		<xsl:message>Current data pointer: <xsl:value-of select="$data-pointer"/></xsl:message>
+		<xsl:message>Current code pointer: <xsl:value-of select="$code-pointer"/></xsl:message>
+		<xsl:message>Current input pointer: <xsl:value-of select="$input-pointer"/></xsl:message>
+	</xsl:if>
+	<!-- Debug output - end -->
+
+	<xsl:choose>
+		<xsl:when test="starts-with($command, '&lt;')">
+		</xsl:when>
+		<xsl:when test="starts-with($command, '&gt;')">
+		</xsl:when>
+		<xsl:when test="starts-with($command, '+')">
+		</xsl:when>
+		<xsl:when test="starts-with($command, '-')">
+		</xsl:when>
+		<xsl:when test="starts-with($command, '.')">
+		</xsl:when>
+		<xsl:when test="starts-with($command, ',')">
+		</xsl:when>
+		<xsl:when test="starts-with($command, '[')">
+		</xsl:when>
+		<xsl:when test="starts-with($command, ']')">
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:message terminate="yes">Illegal instruction at 
+				<xsl:value-of select="$code-pointer"/>
+			</xsl:message>
+		</xsl:otherwise>
+	</xsl:choose>
+
+	<xsl:call-template name="output-data">
+		<xsl:with-param name="data" select="$data-memory"/>
+		<xsl:with-param name="data-pointer" select="$data-pointer"/>
+		<xsl:with-param name="command" select="$command"/>
+	</xsl:call-template>
+
+	<xsl:variable name="changed-data">
+		<xsl:call-template name="change-data">
+			<xsl:with-param name="data" select="$data-memory"/>
+			<xsl:with-param name="data-pointer" select="$data-pointer"/>
+			<xsl:with-param name="input" select="$input"/>
+			<xsl:with-param name="input-pointer" select="$input-pointer"/>
+			<xsl:with-param name="command" select="$command"/>
+		</xsl:call-template>
+	</xsl:variable>
+
+	<xsl:variable name="changed-data-pointer">
+		<xsl:call-template name="change-data-pointer">
+			<xsl:with-param name="data-pointer" select="$data-pointer"/>
+			<xsl:with-param name="code-pointer" select="$code-pointer"/>
+			<xsl:with-param name="command" select="$command"/>
+		</xsl:call-template>
+	</xsl:variable>
+
+	<xsl:variable name="changed-input-pointer">
+		<xsl:call-template name="change-input-pointer">
+			<xsl:with-param name="input-pointer" select="$input-pointer"/>
+			<xsl:with-param name="command" select="$command"/>
+		</xsl:call-template>
+	</xsl:variable>
+
+	<xsl:variable name="code-pointer-next">
+		<xsl:call-template name="next-instruction">
+			<xsl:with-param name="code-pointer" select="$code-pointer"/>
+			<xsl:with-param name="command" select="$command"/>
+		</xsl:call-template>
+	</xsl:variable>
+
+
+	<xsl:if test="not($code-pointer-next &gt; $code-length)">
+		<xsl:call-template name="process-code">
+			<xsl:with-param name="data-memory" select="$changed-data"/>
+			<xsl:with-param name="code-pointer" select="$code-pointer-next"/>
+			<xsl:with-param name="data-pointer" select="$changed-data-pointer"/>
+			<xsl:with-param name="input-pointer" select="$changed-input-pointer"/>
+		</xsl:call-template>
+	</xsl:if>
+
 </xsl:template>
 
 <!-- Main function -->
 <xsl:template match="//Brainfuck">
-	<xsl:value-of select="$code"/>
-	<xsl:value-of select="string-length($data)"/>
+	<xsl:call-template name="process-code"/>
 </xsl:template>
 
 </xsl:transform>
