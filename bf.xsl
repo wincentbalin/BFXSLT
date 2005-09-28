@@ -4,7 +4,7 @@
 <!-- Stylesheet for processing of the Brainfuck XML documents -->
 
 <!-- Here are the pragmas -->
-<xsl:output method="text"/>
+<xsl:output method="text" encoding="ISO-8859-1"/>
 
 <!-- Parameters -->
 <!-- Debug or not -->
