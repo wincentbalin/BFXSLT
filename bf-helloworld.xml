@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE Brainfuck SYSTEM "bf.dtd">
 <Brainfuck>
 	<!-- This is the code for the Hello World in Brainfuck -->
@@ -18,7 +18,6 @@
 		]]>
 	</Code>
 	<!-- No input needed for the simple Hello World program -->
-	<Input>
-	</Input>
+	<Input><![CDATA[]]></Input>
 </Brainfuck>
 
