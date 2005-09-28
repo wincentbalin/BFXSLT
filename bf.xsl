@@ -45,7 +45,7 @@
 </xsl:template>
 
 <!-- Fills the jump table with jump pairs -->
-<xsl:template name="process-jumps">
+<xsl:template name="fill-jumps">
 	
 </xsl:template>
 
