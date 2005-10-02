@@ -198,8 +198,9 @@
 	<xsl:param name="command"/>
 
 	<xsl:if test="$command = '.'">
-		<xsl:variable name="value" select="$data/element[position()-1 = $data-pointer]"/>
-		<xsl:value-of select="string($value)"/>
+		<xsl:call-template name="ascii2char">
+			<xsl:with-param name="ascii" select="$data/element[position()-1 = $data-pointer]"/>
+		</xsl:call-template>
 	</xsl:if>
 </xsl:template>
 
@@ -252,11 +253,66 @@
 <!-- Converts a 1-character string to it's ASCII code -->
 <xsl:template name="char2ascii">
 	<xsl:param name="char"/>
+
+	<xsl:choose>
+		<xsl:when test="$char = ' '">32</xsl:when>
+		<xsl:when test="$char = '!'">33</xsl:when>
+		<xsl:when test="$char = '@'">64</xsl:when>
+		<xsl:when test="$char = 'A'">65</xsl:when>
+		<xsl:otherwise>32</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
 
 <!-- Converts a number of ASCII code to character -->
 <xsl:template name="ascii2char">
 	<xsl:param name="ascii"/>
+
+	<xsl:choose>
+		<xsl:when test="$ascii = 10">
+			<xsl:text disable-output-escaping="yes">
+</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 32">
+			<xsl:text disable-output-escaping="yes"> </xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 33">
+			<xsl:text disable-output-escaping="yes">!</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 64">
+			<xsl:text disable-output-escaping="yes">@</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 65">
+			<xsl:text disable-output-escaping="yes">A</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 72">
+			<xsl:text disable-output-escaping="yes">H</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 87">
+			<xsl:text disable-output-escaping="yes">W</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 100">
+			<xsl:text disable-output-escaping="yes">d</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 101">
+			<xsl:text disable-output-escaping="yes">e</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 108">
+			<xsl:text disable-output-escaping="yes">l</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 111">
+			<xsl:text disable-output-escaping="yes">o</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 114">
+			<xsl:text disable-output-escaping="yes">r</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 119">
+			<xsl:text disable-output-escaping="yes">w</xsl:text>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:value-of select="$ascii"/>
+<!--			<xsl:text disable-output-escaping="yes">x</xsl:text> -->
+		</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
 
 <!-- Main function      -->
