@@ -214,38 +214,40 @@
 
 	<xsl:copy-of select="$data/element[position()-1 &lt; $data-pointer]"/>
 
-	<xsl:choose>
-		<xsl:when test="starts-with($command, '+')">
-			<xsl:variable name="value" select="$data/element[position()-1 = $data-pointer]"/>
-			<xsl:choose>
-				<xsl:when test="$value = 255">
-					0
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="$value + 1"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="starts-with($command, '-')">
-			<xsl:variable name="value" select="$data/element[position()-1 = $data-pointer]"/>
-			<xsl:choose>
-				<xsl:when test="$value = 0">
-					255	
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="$value - 1"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="starts-with($command, ',')">
-			<xsl:call-template name="char2ascii">
-				<xsl:with-param name="char" select="substring($input, $input-pointer, 1)"/>
-			</xsl:call-template>
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:value-of select="$data/element[position()-1 = $data-pointer]"/>
-		</xsl:otherwise>
-	</xsl:choose>
+	<xsl:element name="element">
+		<xsl:choose>
+			<xsl:when test="starts-with($command, '+')">
+				<xsl:variable name="value" select="$data/element[position()-1 = $data-pointer]"/>
+				<xsl:choose>
+					<xsl:when test="$value = 255">
+						0
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="$value + 1"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:when test="starts-with($command, '-')">
+				<xsl:variable name="value" select="$data/element[position()-1 = $data-pointer]"/>
+				<xsl:choose>
+					<xsl:when test="$value = 0">
+						255	
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="$value - 1"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:when test="starts-with($command, ',')">
+				<xsl:call-template name="char2ascii">
+					<xsl:with-param name="char" select="substring($input, $input-pointer, 1)"/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$data/element[position()-1 = $data-pointer]"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:element>
 
 	<xsl:copy-of select="$data/element[position()-1 &gt; $data-pointer]"/>
 </xsl:template>
