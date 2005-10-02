@@ -2,9 +2,16 @@
 # Runs example script
 #
 
+JAVA = java
+JAVA_OPTS = -Xmx512m -jar 
+
+SAXON_JAR = /usr/share/saxon-bin/lib/saxon8.jar
 SAXON_OPTS = -novw
 #SAXON_OPTS = -novw -t
 #SAXON_OPTS = 
+
+XALAN_JAR = /usr/share/xalan/lib/xalan.jar
+XALAN_OPTS = 
 
 STYLESHEET = bf.xsl
 TESTFILE = bf-helloworld.xml
@@ -15,7 +22,10 @@ doc:
 	docbook2pdf bf-doc.xml
 
 saxon:
-	saxon $(SAXON_OPTS) $(TESTFILE) $(STYLESHEET)
+	$(JAVA) $(JAVA_OPTS) $(SAXON_JAR) $(SAXON_OPTS) $(TESTFILE) $(STYLESHEET)
+
+xalan:
+	$(JAVA) $(JAVA_OPTS) $(XALAN_JAR) $(XALAN_OPTS) -IN $(TESTFILE) -XSL $(STYLESHEET)
 
 libxslt:
 	xsltproc $(STYLESHEET) $(TESTFILE)
