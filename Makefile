@@ -3,7 +3,7 @@
 #
 
 JAVA = java
-JAVA_OPTS = -Xmx512m -jar 
+JAVA_OPTS = -Xmx2048m -jar 
 
 SAXON_JAR = /usr/share/saxon-bin/lib/saxon8.jar
 SAXON_OPTS = -novw
