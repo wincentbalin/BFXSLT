@@ -317,8 +317,7 @@
 	</xsl:choose>
 </xsl:template>
 
-<!-- Main function      -->
-<!-- Processes the code -->
+<!-- Main function, processes the code -->
 <xsl:template name="process-code" match="//Brainfuck">
 	<xsl:param name="data-memory" select="$data"/>
 	<xsl:param name="code-pointer" select="0"/>
@@ -326,7 +325,7 @@
 	<xsl:param name="input-pointer" select="0"/>
 
 
-	<xsl:variable name="command" select="substring($code, $code-pointer, 2)"/>
+	<xsl:variable name="command" select="substring($code, $code-pointer, 1)"/>
 
 	<!-- Debug output - begin -->
 	<xsl:if test="$debug = 'yes'">
@@ -342,10 +341,13 @@ Data: <xsl:value-of select="$data-memory"/>
 Length of input: <xsl:value-of select="string-length($input)"/>
 Input: <xsl:value-of select="$input"/>
 		</xsl:message>
-		<xsl:message>
-Length of jump table: <xsl:value-of select="string-length($jump-table)"/>
-Jump table: <xsl:value-of select="$jump-table"/>
-		</xsl:message>
+
+		<xsl:if test="$code-pointer = 0">
+			<xsl:message>
+Length of jump table: <xsl:value-of select="count($jump-table/element)"/>
+Jump table: <xsl:value-of select="$jump-table/*"/>
+			</xsl:message>
+		</xsl:if>
 
 		<xsl:message>Current command: <xsl:value-of select="$command"/></xsl:message>
 		<xsl:message>Current data pointer: <xsl:value-of select="$data-pointer"/></xsl:message>
@@ -353,30 +355,6 @@ Jump table: <xsl:value-of select="$jump-table"/>
 		<xsl:message>Current input pointer: <xsl:value-of select="$input-pointer"/></xsl:message>
 	</xsl:if>
 	<!-- Debug output - end -->
-
-	<xsl:choose>
-		<xsl:when test="starts-with($command, '&lt;')">
-		</xsl:when>
-		<xsl:when test="starts-with($command, '&gt;')">
-		</xsl:when>
-		<xsl:when test="starts-with($command, '+')">
-		</xsl:when>
-		<xsl:when test="starts-with($command, '-')">
-		</xsl:when>
-		<xsl:when test="starts-with($command, '.')">
-		</xsl:when>
-		<xsl:when test="starts-with($command, ',')">
-		</xsl:when>
-		<xsl:when test="starts-with($command, '[')">
-		</xsl:when>
-		<xsl:when test="starts-with($command, ']')">
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:message terminate="yes">Illegal instruction at 
-				<xsl:value-of select="$code-pointer"/>
-			</xsl:message>
-		</xsl:otherwise>
-	</xsl:choose>
 
 	<xsl:call-template name="output-data">
 		<xsl:with-param name="data" select="$data-memory"/>
@@ -427,7 +405,6 @@ Jump table: <xsl:value-of select="$jump-table"/>
 			<xsl:with-param name="input-pointer" select="$changed-input-pointer"/>
 		</xsl:call-template>
 	</xsl:if>
-
 </xsl:template>
 
 </xsl:transform>
