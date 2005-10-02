@@ -46,27 +46,104 @@
 
 <!-- Fills the jump table with jump pairs -->
 <xsl:template name="fill-jumps">
-	
+	<xsl:param name="position" select="0"/>
+
+	<xsl:if test="starts-with(substring($code, $position, 1), '[')">
+		<xsl:call-template name="search-correspondant">
+			<xsl:with-param name="start-position" select="$position"/>
+			<xsl:with-param name="opened" select="1"/>
+		</xsl:call-template>
+	</xsl:if>
+
+	<xsl:if test="$position &lt; $code-length">
+		<xsl:call-template name="fill-jumps">
+			<xsl:with-param name="position" select="$position + 1"/>
+		</xsl:call-template>
+	</xsl:if>
+</xsl:template>
+
+<!-- Searches for the corresponding closing bracket -->
+<xsl:template name="search-correspondant">
+	<xsl:param name="start-position"/>
+	<xsl:param name="position" select="$start-position + 1"/>
+	<xsl:param name="opened"/>
+
+	<xsl:variable name="changed-opened">
+		<xsl:call-template name="change-opened">
+			<xsl:with-param name="opened" select="$opened"/>
+			<xsl:with-param name="instruction" select="substring($code, $position, 1)"/>
+		</xsl:call-template>
+	</xsl:variable>
+
+	<xsl:choose>
+		<xsl:when test="$changed-opened = 0">
+			<xsl:element name="element">
+				<xsl:attribute name="from">
+					<xsl:value-of select="$start-position"/>
+				</xsl:attribute>
+				<xsl:attribute name="to">
+					<xsl:value-of select="$position"/>
+				</xsl:attribute>
+			</xsl:element>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:if test="$position &lt; $code-length">
+				<xsl:call-template name="search-correspondant">
+					<xsl:with-param name="start-position" select="$start-position"/>
+					<xsl:with-param name="position" select="$position + 1"/>
+					<xsl:with-param name="opened" select="$changed-opened"/>
+				</xsl:call-template>
+			</xsl:if>
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
+<!-- Increases or decreases level of opened brackets -->
+<xsl:template name="change-opened">
+	<xsl:param name="opened"/>
+	<xsl:param name="instruction"/>
+
+	<xsl:choose>
+		<xsl:when test="$instruction = '['">
+			<xsl:value-of select="$opened + 1"/>
+		</xsl:when>
+		<xsl:when test="$instruction = ']'">
+			<xsl:value-of select="$opened - 1"/>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:value-of select="$opened"/>
+		</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
 
 <!-- Increases code pointer dependant of the current command,
-     because some command are &lt; and &lt; -->
+     because some commands jump -->
 <xsl:template name="next-instruction">
 	<xsl:param name="code-pointer"/>
+	<xsl:param name="data-pointer"/>
+	<xsl:param name="data"/>
 	<xsl:param name="command"/>
 
 	<xsl:choose>
-		<xsl:when test="starts-with($command, '&lt;')">
-			<xsl:value-of select="$code-pointer + 2"/>
-		</xsl:when>
-		<xsl:when test="starts-with($command, '&gt;')">
-			<xsl:value-of select="$code-pointer + 2"/>
-		</xsl:when>
 		<xsl:when test="starts-with($command, '[')">
-			<xsl:value-of select="$code-pointer + 1"/>
+			<xsl:choose>
+				<xsl:when test="$data/element[position()-1 = $data-pointer] = 0">
+					<xsl:value-of select="$jump-table/element[@from = $code-pointer]/@to + 1"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$code-pointer + 1"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:when>
 		<xsl:when test="starts-with($command, ']')">
-			<xsl:value-of select="$code-pointer + 1"/>
+			<xsl:choose>
+				<xsl:when test="$data/element[position()-1 = $data-pointer] != 0">
+					<xsl:value-of select="$jump-table/element[@to = $code-pointer]/@from"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$code-pointer + 1"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:when>
 		<xsl:otherwise>
 			<xsl:value-of select="$code-pointer + 1"/>
@@ -277,6 +354,8 @@ Jump table: <xsl:value-of select="$jump-table"/>
 	<xsl:variable name="code-pointer-next">
 		<xsl:call-template name="next-instruction">
 			<xsl:with-param name="code-pointer" select="$code-pointer"/>
+			<xsl:with-param name="data-pointer" select="$data-pointer"/>
+			<xsl:with-param name="data" select="$changed-data"/>
 			<xsl:with-param name="command" select="$command"/>
 		</xsl:call-template>
 	</xsl:variable>
