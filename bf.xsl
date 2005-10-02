@@ -252,70 +252,6 @@
 	<xsl:copy-of select="$data/element[position()-1 &gt; $data-pointer]"/>
 </xsl:template>
 
-<!-- Converts a 1-character string to it's ASCII code -->
-<xsl:template name="char2ascii">
-	<xsl:param name="char"/>
-
-	<xsl:choose>
-		<xsl:when test="$char = ' '">32</xsl:when>
-		<xsl:when test="$char = '!'">33</xsl:when>
-		<xsl:when test="$char = '@'">64</xsl:when>
-		<xsl:when test="$char = 'A'">65</xsl:when>
-		<xsl:otherwise>32</xsl:otherwise>
-	</xsl:choose>
-</xsl:template>
-
-<!-- Converts a number of ASCII code to character -->
-<xsl:template name="ascii2char">
-	<xsl:param name="ascii"/>
-
-	<xsl:choose>
-		<xsl:when test="$ascii = 10">
-			<xsl:text disable-output-escaping="yes">
-</xsl:text>
-		</xsl:when>
-		<xsl:when test="$ascii = 32">
-			<xsl:text disable-output-escaping="yes"> </xsl:text>
-		</xsl:when>
-		<xsl:when test="$ascii = 33">
-			<xsl:text disable-output-escaping="yes">!</xsl:text>
-		</xsl:when>
-		<xsl:when test="$ascii = 64">
-			<xsl:text disable-output-escaping="yes">@</xsl:text>
-		</xsl:when>
-		<xsl:when test="$ascii = 65">
-			<xsl:text disable-output-escaping="yes">A</xsl:text>
-		</xsl:when>
-		<xsl:when test="$ascii = 72">
-			<xsl:text disable-output-escaping="yes">H</xsl:text>
-		</xsl:when>
-		<xsl:when test="$ascii = 87">
-			<xsl:text disable-output-escaping="yes">W</xsl:text>
-		</xsl:when>
-		<xsl:when test="$ascii = 100">
-			<xsl:text disable-output-escaping="yes">d</xsl:text>
-		</xsl:when>
-		<xsl:when test="$ascii = 101">
-			<xsl:text disable-output-escaping="yes">e</xsl:text>
-		</xsl:when>
-		<xsl:when test="$ascii = 108">
-			<xsl:text disable-output-escaping="yes">l</xsl:text>
-		</xsl:when>
-		<xsl:when test="$ascii = 111">
-			<xsl:text disable-output-escaping="yes">o</xsl:text>
-		</xsl:when>
-		<xsl:when test="$ascii = 114">
-			<xsl:text disable-output-escaping="yes">r</xsl:text>
-		</xsl:when>
-		<xsl:when test="$ascii = 119">
-			<xsl:text disable-output-escaping="yes">w</xsl:text>
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:value-of select="$ascii"/>
-<!--			<xsl:text disable-output-escaping="yes">x</xsl:text> -->
-		</xsl:otherwise>
-	</xsl:choose>
-</xsl:template>
 
 <!-- Main function, processes the code -->
 <xsl:template name="process-code" match="//Brainfuck">
@@ -405,6 +341,424 @@ Jump table: <xsl:value-of select="$jump-table/*"/>
 			<xsl:with-param name="input-pointer" select="$changed-input-pointer"/>
 		</xsl:call-template>
 	</xsl:if>
+</xsl:template>
+
+
+<!-- Converts a 1-character string to it's ASCII code -->
+<xsl:template name="char2ascii">
+	<xsl:param name="char"/>
+
+	<xsl:choose>
+		<xsl:when test="$char = '	'">9</xsl:when>
+		<xsl:when test="$char = '
+'">10</xsl:when>
+		<xsl:when test="$char = ' '">32</xsl:when>
+		<xsl:when test="$char = '!'">33</xsl:when>
+		<xsl:when test="$char = '&quot;'">34</xsl:when>
+		<xsl:when test="$char = '#'">35</xsl:when>
+		<xsl:when test="$char = '$'">36</xsl:when>
+		<xsl:when test="$char = '%'">37</xsl:when>
+		<xsl:when test="$char = '&amp;'">38</xsl:when>
+		<xsl:when test="$char = '&apos;'">39</xsl:when>
+		<xsl:when test="$char = '('">40</xsl:when>
+		<xsl:when test="$char = ')'">41</xsl:when>
+		<xsl:when test="$char = '*'">42</xsl:when>
+		<xsl:when test="$char = '+'">43</xsl:when>
+		<xsl:when test="$char = ','">44</xsl:when>
+		<xsl:when test="$char = '-'">45</xsl:when>
+		<xsl:when test="$char = '.'">46</xsl:when>
+		<xsl:when test="$char = '/'">47</xsl:when>
+		<xsl:when test="$char = '0'">48</xsl:when>
+		<xsl:when test="$char = '1'">49</xsl:when>
+		<xsl:when test="$char = '2'">50</xsl:when>
+		<xsl:when test="$char = '3'">51</xsl:when>
+		<xsl:when test="$char = '4'">52</xsl:when>
+		<xsl:when test="$char = '5'">53</xsl:when>
+		<xsl:when test="$char = '6'">54</xsl:when>
+		<xsl:when test="$char = '7'">55</xsl:when>
+		<xsl:when test="$char = '8'">56</xsl:when>
+		<xsl:when test="$char = '9'">57</xsl:when>
+		<xsl:when test="$char = ':'">58</xsl:when>
+		<xsl:when test="$char = ';'">59</xsl:when>
+		<xsl:when test="$char = '&lt;'">60</xsl:when>
+		<xsl:when test="$char = '='">61</xsl:when>
+		<xsl:when test="$char = '&gt;'">62</xsl:when>
+		<xsl:when test="$char = '?'">63</xsl:when>
+		<xsl:when test="$char = '@'">64</xsl:when>
+		<xsl:when test="$char = 'A'">65</xsl:when>
+		<xsl:when test="$char = 'B'">66</xsl:when>
+		<xsl:when test="$char = 'C'">67</xsl:when>
+		<xsl:when test="$char = 'D'">68</xsl:when>
+		<xsl:when test="$char = 'E'">69</xsl:when>
+		<xsl:when test="$char = 'F'">70</xsl:when>
+		<xsl:when test="$char = 'G'">71</xsl:when>
+		<xsl:when test="$char = 'H'">72</xsl:when>
+		<xsl:when test="$char = 'I'">73</xsl:when>
+		<xsl:when test="$char = 'J'">74</xsl:when>
+		<xsl:when test="$char = 'K'">75</xsl:when>
+		<xsl:when test="$char = 'L'">76</xsl:when>
+		<xsl:when test="$char = 'M'">77</xsl:when>
+		<xsl:when test="$char = 'N'">78</xsl:when>
+		<xsl:when test="$char = 'O'">79</xsl:when>
+		<xsl:when test="$char = 'P'">80</xsl:when>
+		<xsl:when test="$char = 'Q'">81</xsl:when>
+		<xsl:when test="$char = 'R'">82</xsl:when>
+		<xsl:when test="$char = 'S'">83</xsl:when>
+		<xsl:when test="$char = 'T'">84</xsl:when>
+		<xsl:when test="$char = 'U'">85</xsl:when>
+		<xsl:when test="$char = 'V'">86</xsl:when>
+		<xsl:when test="$char = 'W'">87</xsl:when>
+		<xsl:when test="$char = 'X'">88</xsl:when>
+		<xsl:when test="$char = 'Y'">89</xsl:when>
+		<xsl:when test="$char = 'Z'">90</xsl:when>
+		<xsl:when test="$char = '['">91</xsl:when>
+		<xsl:when test="$char = '\'">92</xsl:when>
+		<xsl:when test="$char = ']'">93</xsl:when>
+		<xsl:when test="$char = '^'">94</xsl:when>
+		<xsl:when test="$char = '_'">95</xsl:when>
+		<xsl:when test="$char = '`'">96</xsl:when>
+		<xsl:when test="$char = 'a'">97</xsl:when>
+		<xsl:when test="$char = 'b'">98</xsl:when>
+		<xsl:when test="$char = 'c'">99</xsl:when>
+		<xsl:when test="$char = 'd'">100</xsl:when>
+		<xsl:when test="$char = 'e'">101</xsl:when>
+		<xsl:when test="$char = 'f'">102</xsl:when>
+		<xsl:when test="$char = 'g'">103</xsl:when>
+		<xsl:when test="$char = 'h'">104</xsl:when>
+		<xsl:when test="$char = 'i'">105</xsl:when>
+		<xsl:when test="$char = 'j'">106</xsl:when>
+		<xsl:when test="$char = 'k'">107</xsl:when>
+		<xsl:when test="$char = 'l'">108</xsl:when>
+		<xsl:when test="$char = 'm'">109</xsl:when>
+		<xsl:when test="$char = 'n'">110</xsl:when>
+		<xsl:when test="$char = 'o'">111</xsl:when>
+		<xsl:when test="$char = 'p'">112</xsl:when>
+		<xsl:when test="$char = 'q'">113</xsl:when>
+		<xsl:when test="$char = 'r'">114</xsl:when>
+		<xsl:when test="$char = 's'">115</xsl:when>
+		<xsl:when test="$char = 't'">116</xsl:when>
+		<xsl:when test="$char = 'u'">117</xsl:when>
+		<xsl:when test="$char = 'v'">118</xsl:when>
+		<xsl:when test="$char = 'w'">119</xsl:when>
+		<xsl:when test="$char = 'x'">120</xsl:when>
+		<xsl:when test="$char = 'y'">121</xsl:when>
+		<xsl:when test="$char = 'z'">122</xsl:when>
+		<xsl:when test="$char = '{'">123</xsl:when>
+		<xsl:when test="$char = '|'">124</xsl:when>
+		<xsl:when test="$char = '}'">125</xsl:when>
+		<xsl:when test="$char = '~'">126</xsl:when>
+		<xsl:otherwise>32</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
+<!-- Converts a number of ASCII code to character -->
+<xsl:template name="ascii2char">
+	<xsl:param name="ascii"/>
+
+	<xsl:choose>
+		<xsl:when test="$ascii = 9">
+			<xsl:text disable-output-escaping="yes">	</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 10">
+			<xsl:text disable-output-escaping="yes">
+</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 13">
+			<xsl:text disable-output-escaping="yes">
+</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 32">
+			<xsl:text disable-output-escaping="yes"> </xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 33">
+			<xsl:text disable-output-escaping="yes">!</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 34">
+			<xsl:text disable-output-escaping="yes">"</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 35">
+			<xsl:text disable-output-escaping="yes">#</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 36">
+			<xsl:text disable-output-escaping="yes">$</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 37">
+			<xsl:text disable-output-escaping="yes">%</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 38">
+			<xsl:text disable-output-escaping="yes">&amp;</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 39">
+			<xsl:text disable-output-escaping="yes">'</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 40">
+			<xsl:text disable-output-escaping="yes">(</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 41">
+			<xsl:text disable-output-escaping="yes">)</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 42">
+			<xsl:text disable-output-escaping="yes">*</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 43">
+			<xsl:text disable-output-escaping="yes">+</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 44">
+			<xsl:text disable-output-escaping="yes">,</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 45">
+			<xsl:text disable-output-escaping="yes">-</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 46">
+			<xsl:text disable-output-escaping="yes">.</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 47">
+			<xsl:text disable-output-escaping="yes">/</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 48">
+			<xsl:text disable-output-escaping="yes">0</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 49">
+			<xsl:text disable-output-escaping="yes">1</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 50">
+			<xsl:text disable-output-escaping="yes">2</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 51">
+			<xsl:text disable-output-escaping="yes">3</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 52">
+			<xsl:text disable-output-escaping="yes">4</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 53">
+			<xsl:text disable-output-escaping="yes">5</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 54">
+			<xsl:text disable-output-escaping="yes">6</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 55">
+			<xsl:text disable-output-escaping="yes">7</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 56">
+			<xsl:text disable-output-escaping="yes">8</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 57">
+			<xsl:text disable-output-escaping="yes">9</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 58">
+			<xsl:text disable-output-escaping="yes">:</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 59">
+			<xsl:text disable-output-escaping="yes">;</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 60">
+			<xsl:text disable-output-escaping="yes">&lt;</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 61">
+			<xsl:text disable-output-escaping="yes">=</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 62">
+			<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 63">
+			<xsl:text disable-output-escaping="yes">?</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 64">
+			<xsl:text disable-output-escaping="yes">@</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 65">
+			<xsl:text disable-output-escaping="yes">A</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 66">
+			<xsl:text disable-output-escaping="yes">B</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 67">
+			<xsl:text disable-output-escaping="yes">C</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 68">
+			<xsl:text disable-output-escaping="yes">D</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 69">
+			<xsl:text disable-output-escaping="yes">E</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 70">
+			<xsl:text disable-output-escaping="yes">F</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 71">
+			<xsl:text disable-output-escaping="yes">G</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 72">
+			<xsl:text disable-output-escaping="yes">H</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 73">
+			<xsl:text disable-output-escaping="yes">I</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 74">
+			<xsl:text disable-output-escaping="yes">J</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 75">
+			<xsl:text disable-output-escaping="yes">K</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 76">
+			<xsl:text disable-output-escaping="yes">L</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 77">
+			<xsl:text disable-output-escaping="yes">M</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 78">
+			<xsl:text disable-output-escaping="yes">N</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 79">
+			<xsl:text disable-output-escaping="yes">N</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 80">
+			<xsl:text disable-output-escaping="yes">O</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 81">
+			<xsl:text disable-output-escaping="yes">P</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 82">
+			<xsl:text disable-output-escaping="yes">Q</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 83">
+			<xsl:text disable-output-escaping="yes">R</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 84">
+			<xsl:text disable-output-escaping="yes">S</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 85">
+			<xsl:text disable-output-escaping="yes">T</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 86">
+			<xsl:text disable-output-escaping="yes">U</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 86">
+			<xsl:text disable-output-escaping="yes">V</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 87">
+			<xsl:text disable-output-escaping="yes">W</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 88">
+			<xsl:text disable-output-escaping="yes">X</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 89">
+			<xsl:text disable-output-escaping="yes">Y</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 90">
+			<xsl:text disable-output-escaping="yes">Z</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 91">
+			<xsl:text disable-output-escaping="yes">[</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 92">
+			<xsl:text disable-output-escaping="yes">\</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 93">
+			<xsl:text disable-output-escaping="yes">]</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 94">
+			<xsl:text disable-output-escaping="yes">^</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 95">
+			<xsl:text disable-output-escaping="yes">_</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 96">
+			<xsl:text disable-output-escaping="yes">`</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 97">
+			<xsl:text disable-output-escaping="yes">a</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 98">
+			<xsl:text disable-output-escaping="yes">b</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 99">
+			<xsl:text disable-output-escaping="yes">c</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 100">
+			<xsl:text disable-output-escaping="yes">d</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 101">
+			<xsl:text disable-output-escaping="yes">e</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 102">
+			<xsl:text disable-output-escaping="yes">f</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 103">
+			<xsl:text disable-output-escaping="yes">g</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 104">
+			<xsl:text disable-output-escaping="yes">h</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 105">
+			<xsl:text disable-output-escaping="yes">i</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 106">
+			<xsl:text disable-output-escaping="yes">j</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 107">
+			<xsl:text disable-output-escaping="yes">k</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 108">
+			<xsl:text disable-output-escaping="yes">l</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 109">
+			<xsl:text disable-output-escaping="yes">m</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 110">
+			<xsl:text disable-output-escaping="yes">n</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 111">
+			<xsl:text disable-output-escaping="yes">o</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 112">
+			<xsl:text disable-output-escaping="yes">p</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 113">
+			<xsl:text disable-output-escaping="yes">q</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 114">
+			<xsl:text disable-output-escaping="yes">r</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 115">
+			<xsl:text disable-output-escaping="yes">s</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 116">
+			<xsl:text disable-output-escaping="yes">t</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 117">
+			<xsl:text disable-output-escaping="yes">u</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 118">
+			<xsl:text disable-output-escaping="yes">v</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 119">
+			<xsl:text disable-output-escaping="yes">w</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 120">
+			<xsl:text disable-output-escaping="yes">x</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 121">
+			<xsl:text disable-output-escaping="yes">y</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 122">
+			<xsl:text disable-output-escaping="yes">z</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 123">
+			<xsl:text disable-output-escaping="yes">{</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 124">
+			<xsl:text disable-output-escaping="yes">|</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 125">
+			<xsl:text disable-output-escaping="yes">}</xsl:text>
+		</xsl:when>
+		<xsl:when test="$ascii = 126">
+			<xsl:text disable-output-escaping="yes">~</xsl:text>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:value-of select="$ascii"/>
+		</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
 
 </xsl:transform>
