@@ -37,7 +37,7 @@
 	<xsl:param name="position" select="$data-length"/>
 
 	<xsl:if test="$position != 0">
-		<element>0</element>
+		<xsl:element name="element">0</xsl:element>
 		<xsl:call-template name="fill-data">
 			<xsl:with-param name="position" select="$position - 1"/>
 		</xsl:call-template>
@@ -135,7 +135,6 @@
 	<xsl:param name="command"/>
 
 	<xsl:copy-of select="$data/element[position()-1 &lt; $data-pointer]"/>
-	<element>
 
 	<xsl:choose>
 		<xsl:when test="starts-with($command, '+')">
@@ -170,7 +169,6 @@
 		</xsl:otherwise>
 	</xsl:choose>
 
-	</element>
 	<xsl:copy-of select="$data/element[position()-1 &gt; $data-pointer]"/>
 </xsl:template>
 
