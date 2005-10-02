@@ -6,13 +6,19 @@ SAXON_OPTS = -novw
 #SAXON_OPTS = -novw -t
 #SAXON_OPTS = 
 
-all: test
+STYLESHEET = bf.xsl
+TESTFILE = bf-helloworld.xml
+
+all: saxon
 
 doc:
 	docbook2pdf bf-doc.xml
 
-test:
-	saxon $(SAXON_OPTS) bf-helloworld.xml bf.xsl
+saxon:
+	saxon $(SAXON_OPTS) $(TESTFILE) $(STYLESHEET)
+
+libxslt:
+	xsltproc $(STYLESHEET) $(TESTFILE)
 
 clean:
 	rm -f bf-doc.pdf
