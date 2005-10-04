@@ -359,7 +359,6 @@ Jump table: <xsl:value-of select="$jump-table/*"/>
 		<xsl:when test="$char = '$'">36</xsl:when>
 		<xsl:when test="$char = '%'">37</xsl:when>
 		<xsl:when test="$char = '&amp;'">38</xsl:when>
-		<xsl:when test="$char = '&apos;'">39</xsl:when>
 		<xsl:when test="$char = '('">40</xsl:when>
 		<xsl:when test="$char = ')'">41</xsl:when>
 		<xsl:when test="$char = '*'">42</xsl:when>
